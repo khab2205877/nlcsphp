@@ -47,6 +47,7 @@
             <p class="fs-4 mt-3">Hello, admin</p>
           </div>
           <ul class="list-unstyled fs-5 mx-3">
+            <li><a class="text-decoration-none text-white d-block py-2" href="/admin"><i class="fa-solid fa-house"></i> DashBoard</a></li>
             <li><a class="text-decoration-none text-white d-block py-2" href="/admin/brands"><i class="fa-solid fa-list"></i> Brands</a></li>
             <li><a class="text-decoration-none text-white d-block py-2" href="/admin/products"><i class="fa-solid fa-table-list"></i> Products</a></li>
             <li><a class="text-decoration-none text-white d-block py-2" href="/admin/user"><i class="fa-solid fa-users"></i> Customers</a></li>

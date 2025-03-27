@@ -47,10 +47,10 @@
 <div class="container">
 
     <!-- SECTION HEADING -->
-    <h2 class="text-center animate__animated animate__bounce">Product</h2>
+    <h2 class="text-center animate__animated animate__bounce">Giới Thiệu</h2>
     <div class="row">
         <div class="col-md-6 offset-md-3 text-center">
-            <p class="animate__animated animate__fadeInLeft">View all product here.</p>
+            <p class="animate__animated animate__fadeInLeft">Trang quản trị</p>
         </div>
     </div>
 
@@ -65,79 +65,35 @@
             <?php endif; ?>
             <!-- FLASH MESSAGES -->
 
-            <a href="/admin/create" class="btn btn-success mb-3">
-                <i class="fas fa-plus-circle"></i> Add New Phone
-            </a>
-
-            <div class="d-flex justify-content-between mb-3">
-                <div>
-                    <label class="me-2">Show</label>
-                    <select id="entries-per-page" class="">
-                        <option value="5">5</option>
-                        <option value="10" selected>10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <label class="ms-2">entries</label>
-                </div>
-                <div>
-                    <input type="text" id="custom-search" class="form-control form-control-sm" placeholder="Search...">
-                </div>
-            </div>
-
-            <!-- Table Starts Here -->
-            <table id="phones" class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Model</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Date Created</th>
-                        <th scope="col">Chipset</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($smartphones as $smartphone) : ?>
-                        <tr>
-                            <td><?= $this->e($smartphone->name) ?></td>
-                            <td><?= number_format($smartphone->price, 0, ',', '.') ?></td>
-                            <td><?= $this->e(date("d-m-Y", strtotime($smartphone->created_at))) ?></td>
-                            <td><?= $this->e($smartphone->processor) ?></td>
-                            <td class="d-flex justify-content-center">
-                                <a href="<?= '/admin/edit/' . $this->e($smartphone->id) ?>" class="btn btn-xs btn-warning">
-                                    <i alt="Edit" class="fa fa-pencil"></i> Edit
-                                </a>
-                                <form class="ms-1" action="<?= '/admin/delete/' . $this->e($smartphone->id) ?>" method="POST">
-                                    <button type="submit" class="btn btn-xs btn-danger" name="delete-phone">
-                                        <i alt="Delete" class="fa fa-trash"></i> Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-            <!-- Table Ends Here -->
+            <h1>Xin chào</h1>
+            <br />
+            <p>
+                Đây là hệ thống quản trị của website Thương mại điện tử do Nguyễn Văn Kha xây dựng và phát triển, dành cho Lập trình web PHP.
+            </p>
+            <br />
+            <p>
+                Hệ thống quản trị này có các chức năng quản lý sau:
+                <br />
+                - Quản lý Thành viên
+                <br />
+                - Quản lý Danh mục sản phẩm
+                <br />
+                - Quản lý Sản phẩm
+                <br />
+                - ...
+            </p>
+            <br />
+            <p>
+                Hệ thống đang trong quá trình hoàn thiện. Hệ thống vẫn tiếp tục được nâng cấp và cải tiến để quản trị viên được sử dụng những chức năng tốt nhất của hệ thống.
+            </p>
+            <br />
+            <p>
+                <b>Nguyễn Văn Kha</b>
+            </p>
         </div>
     </div>
-    <div id="delete-confirm" class="modal fade" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p class="lead">Are you sure you want to delete this smartphone?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="delete">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
+
 
 </div>
 <?php $this->stop() ?>

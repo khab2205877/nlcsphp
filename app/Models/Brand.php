@@ -9,6 +9,7 @@ class Brand
   private PDO $db;
 
   public int $id = -1;
+  public ?string $image = null;
   public string $name;
 
   public function __construct(PDO $pdo)
@@ -26,18 +27,20 @@ class Brand
   {
     if ($this->id >= 0) {
       $statement = $this->db->prepare(
-        'UPDATE brands SET name = :name WHERE id = :id'
+        'UPDATE brands SET name = :name, image = :image WHERE id = :id'
       );
       return $statement->execute([
         'name' => $this->name,
+        'image' => $this->image,
         'id' => $this->id
       ]);
     } else {
       $statement = $this->db->prepare(
-        'INSERT INTO brands (name) VALUES (:name)'
+        'INSERT INTO brands (name, image) VALUES (:name, :image)'
       );
       $result = $statement->execute([
         'name' => $this->name,
+        'image' => $this->image
       ]);
       if ($result) {
         $this->id = $this->db->lastInsertId();
@@ -62,6 +65,7 @@ class Brand
       $brand = new Brand($this->db);
       $brand->id = $row['id'];
       $brand->name = $row['name'];
+      $brand->image = $row['image'];
       return $brand;
     }
     return null;

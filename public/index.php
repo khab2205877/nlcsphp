@@ -27,6 +27,10 @@ $router->set404('\App\Controllers\Controller@sendNotFound');
 // admin routes
 $router->get('/admin', '\App\Controllers\Admin\ProductController@index');
 $router->get('/admin/user', '\App\Controllers\Admin\AdminController@users');
+// admin product routes
+$router->get('/admin/products', '\App\Controllers\Admin\ProductController@products');
+$router->get('/admin/create', '\App\Controllers\Admin\ProductController@create');
+$router->post('/admin/store', '\App\Controllers\Admin\ProductController@store');
 
 // Admin brand routes
 $router->get('/admin/brands', '\App\Controllers\Admin\BrandController@index');

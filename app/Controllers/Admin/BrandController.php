@@ -32,11 +32,13 @@ class BrandController extends Controller
   public function store()
   {
     $data = $_POST;
+    $imagePath = $this->handleImageUpload();
     $brand = new Brand(PDO());
     $errors = $brand->validate($data);
 
     if (empty($errors)) {
       $brand->name = $data['name'];
+      $brand->image = $imagePath;
       $brand->save();
       $_SESSION['success_Mess'] = 'Thương hiệu đã được thêm thành công.';
       redirect('/admin/brands');
@@ -75,10 +77,12 @@ class BrandController extends Controller
     }
 
     $data = $_POST;
+    $imagePath = $this->handleImageUpload($brand->image);
     $errors = $brand->validate($data);
 
     if (empty($errors)) {
       $brand->name = $data['name'];
+      $brand->image = $imagePath;
       $brand->save();
       $_SESSION['success_Mess'] = 'Thương hiệu đã được cập nhật thành công.';
       redirect('/admin/brands');
@@ -97,8 +101,41 @@ class BrandController extends Controller
       $this->sendNotFound();
     }
 
+    if ($brand->image) {
+      $imagePath = __DIR__ . '/../../../public/' . ltrim($brand->image, '/');
+      if (file_exists($imagePath)) {
+        unlink($imagePath);
+      }
+    }
+
     $brand->delete();
     $_SESSION['success_Mess'] = 'Thương hiệu đã được xóa thành công.';
     redirect('/admin/brands');
+  }
+
+  private function handleImageUpload(?string $existingImage = null): ?string
+  {
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+      if ($existingImage) {
+        $existingImagePath = __DIR__ . '/../../../public/' . ltrim($existingImage, '/');
+        if (file_exists($existingImagePath)) {
+          unlink($existingImagePath);
+        }
+      }
+
+      $uploadDir = __DIR__ . '/../../../public/uploads/';
+      if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+      }
+
+      $fileName = time() . '_' . basename($_FILES['image']['name']);
+      $destination = $uploadDir . $fileName;
+
+      if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
+        return '/uploads/' . $fileName;
+      }
+    }
+
+    return $existingImage;
   }
 }

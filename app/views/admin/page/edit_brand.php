@@ -29,7 +29,7 @@
               </div>
             </div>
             <!-- img -->
-            <!-- <div class="row g-3 mt-0">
+            <div class="row g-3 mt-0">
               <div class="col-12">
                 <div class="form-floating">
                   <input type="file" class="form-control <?= isset($errors['image']) ? ' is-invalid' : '' ?>" name="image" id="imageInput" accept="image/*"
@@ -47,7 +47,7 @@
                   </div>
                 <?php endif; ?>
               </div>
-            </div> -->
+            </div>
           </div>
         </div>
         <div class="row mt-5">

@@ -50,13 +50,22 @@
                                     </span>
                                 <?php endif ?>
                             </div>
-                            <div class="input-group mb-1">
+                            <div class="input-group mb-3">
                                 <input id="password-confirm" type="password" class="form-control form-control-lg bg-light fs-6" <?= isset($errors['password_confirmation']) ? ' is-invalid' : '' ?>" name="password_confirmation" required placeholder="Nhập lại mật khẩu">
                                 <?php if (isset($errors['password_confirmation'])) : ?>
                                     <span class="invalid-feedback">
                                         <strong><?= $this->e($errors['password_confirmation']) ?></strong>
                                     </span>
                                 <?php endif ?>
+                            </div>
+                            <div class="input-group mb-3 d-flex justify-content-between">
+                                <!-- <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="formCheck">
+                                    <label for="formCheck" class="form-check-label text-secondary"><small>Ghi nhớ tôi</small></label>
+                                </div> -->
+                                <div class="forgot">
+                                    <small><a href="#">Điều khoản & Điều kiện</a></small>
+                                </div>
                             </div>
                             <div class="input-group mb-3">
                                 <button class="btn btn-lg w-100 fs-5 text-white btn-log">Đăng ký</button>
