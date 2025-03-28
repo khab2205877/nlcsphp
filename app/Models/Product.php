@@ -36,43 +36,86 @@ class Product
         return $products;
     }
 
-    public function save(): bool
+    public function save(array $images = [], array $sizes = []): bool
     {
-        if ($this->id >= 0) {
-            $statement = $this->db->prepare(
-                'UPDATE products SET name = :name, brand_id = :brand_id, price = :price, image = :image, discount_percent = :discount_percent, description = :description, material = :material, origin = :origin WHERE id = :id'
-            );
-            return $statement->execute([
-                'name' => $this->name,
-                'brand_id' => $this->brand_id,
-                'price' => $this->price,
-                'image' => $this->image,
-                'discount_percent' => $this->discount_percent,
-                'description' => $this->description,
-                'material' => $this->material,
-                'origin' => $this->origin,
-                'id' => $this->id
-            ]);
-        } else {
-            $statement = $this->db->prepare(
-                'INSERT INTO products (name, brand_id, price, image, discount_percent, description, material, origin, created_at) VALUES (:name, :brand_id, :price, :image, :discount_percent, :description, :material, :origin, NOW())'
-            );
-            $result = $statement->execute([
-                'name' => $this->name,
-                'brand_id' => $this->brand_id,
-                'price' => $this->price,
-                'image' => $this->image,
-                'discount_percent' => $this->discount_percent,
-                'description' => $this->description,
-                'material' => $this->material,
-                'origin' => $this->origin
-            ]);
+        try {
+            // Bắt đầu giao dịch
+            $this->db->beginTransaction();
 
-            if ($result) {
-                $this->id = $this->db->lastInsertId();
+            if ($this->id >= 0) {
+                // Cập nhật sản phẩm nếu đã tồn tại
+                $statement = $this->db->prepare(
+                    'UPDATE products SET name = :name, brand_id = :brand_id, price = :price, image = :image, discount_percent = :discount_percent, description = :description, material = :material, origin = :origin WHERE id = :id'
+                );
+                $result = $statement->execute([
+                    'name' => $this->name,
+                    'brand_id' => $this->brand_id,
+                    'price' => $this->price,
+                    'image' => $this->image,
+                    'discount_percent' => $this->discount_percent,
+                    'description' => $this->description,
+                    'material' => $this->material,
+                    'origin' => $this->origin,
+                    'id' => $this->id
+                ]);
+
+                // Xóa dữ liệu cũ trong bảng `product_images` và `product_sizes`
+                $this->db->prepare('DELETE FROM product_images WHERE product_id = :product_id')->execute(['product_id' => $this->id]);
+                $this->db->prepare('DELETE FROM product_sizes WHERE product_id = :product_id')->execute(['product_id' => $this->id]);
+            } else {
+                // Thêm sản phẩm mới
+                $statement = $this->db->prepare(
+                    'INSERT INTO products (name, brand_id, price, image, discount_percent, description, material, origin, created_at) VALUES (:name, :brand_id, :price, :image, :discount_percent, :description, :material, :origin, NOW())'
+                );
+                $result = $statement->execute([
+                    'name' => $this->name,
+                    'brand_id' => $this->brand_id,
+                    'price' => $this->price,
+                    'image' => $this->image,
+                    'discount_percent' => $this->discount_percent,
+                    'description' => $this->description,
+                    'material' => $this->material,
+                    'origin' => $this->origin
+                ]);
+
+                if ($result) {
+                    $this->id = $this->db->lastInsertId();
+                }
             }
 
-            return $result;
+            // Thêm hình ảnh vào bảng `product_images`
+            if (!empty($images)) {
+                $stmt = $this->db->prepare(
+                    'INSERT INTO product_images (product_id, image_path, created_at) VALUES (:product_id, :image_path, NOW())'
+                );
+                foreach ($images as $image) {
+                    $stmt->execute([
+                        'product_id' => $this->id,
+                        'image_path' => $image
+                    ]);
+                }
+            }
+
+            // Thêm kích thước vào bảng `product_sizes`
+            if (!empty($sizes)) {
+                $stmt = $this->db->prepare(
+                    'INSERT INTO product_sizes (product_id, size, created_at) VALUES (:product_id, :size, NOW())'
+                );
+                foreach ($sizes as $size) {
+                    $stmt->execute([
+                        'product_id' => $this->id,
+                        'size' => $size
+                    ]);
+                }
+            }
+
+            // Xác nhận giao dịch
+            $this->db->commit();
+            return true;
+        } catch (\Exception $e) {
+            // Hủy giao dịch nếu có lỗi
+            $this->db->rollBack();
+            throw $e;
         }
     }
 

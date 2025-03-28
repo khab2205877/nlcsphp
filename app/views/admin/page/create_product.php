@@ -9,7 +9,7 @@
         </div>
 
         <div class="card-body pt-0">
-            <form action="/admin/store" method="POST" enctype="multipart/form-data">
+            <form action="/admin/products/store" method="POST" enctype="multipart/form-data">
                 <!-- Main Content -->
                 <div class="row g-3">
                     <!-- Left Column -->
@@ -96,7 +96,7 @@
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input multiple type="file" class="form-control <?= isset($errors['image']) ? ' is-invalid' : '' ?>"
-                                        name="img_product[]" id="imageInput" accept="image/*"
+                                        name="images[]" id="imageInput" accept="image/*"
                                         onchange="previewImageProduct(event)">
                                     <label>Hình Ảnh</label>
                                 </div>
@@ -106,12 +106,12 @@
                             <!-- Material & Origin -->
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control form-control-custom <?= isset($errors['color']) ? ' is-invalid' : '' ?>" name="color"
-                                        value="<?= isset($old['color']) ? $this->e($old['color']) : '' ?>" placeholder="Chất liệu">
+                                    <input type="text" class="form-control form-control-custom <?= isset($errors['material']) ? ' is-invalid' : '' ?>" name="material"
+                                        value="<?= isset($old['material']) ? $this->e($old['material']) : '' ?>" placeholder="Chất liệu">
                                     <label>Chất liệu</label>
-                                    <?php if (isset($errors['color'])) : ?>
+                                    <?php if (isset($errors['material'])) : ?>
                                         <span class="invalid-feedback">
-                                            <strong><?= $this->e($errors['color']) ?></strong>
+                                            <strong><?= $this->e($errors['material']) ?></strong>
                                         </span>
                                     <?php endif ?>
                                 </div>
@@ -128,15 +128,22 @@
                                     <?php endif ?>
                                 </div>
                             </div>
+                            <!-- size -->
+                            <div class="col-12">
+                                <div class="form-floating" id="numbersContainer">
+                                    <input type="number" class="form-control form-control-custom" name="numbers[]" placeholder="Nhập số">
+                                    <button type="button" onclick="addNumberField()">Thêm số</button>
+                                </div>
+                            </div>
                             <!-- Description -->
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea type="text" class="form-control form-control-custom <?= isset($errors['processor']) ? ' is-invalid' : '' ?>"  name="processor"
-                                        value="<?= isset($old['processor']) ? $this->e($old['processor']) : '' ?>" placeholder="Mô tả sản phẩm" style="height: 130px"></textarea>
+                                    <textarea type="text" class="form-control form-control-custom <?= isset($errors['description']) ? ' is-invalid' : '' ?>" name="description"
+                                        value="<?= isset($old['description']) ? $this->e($old['description']) : '' ?>" placeholder="Mô tả sản phẩm" style="height: 130px"></textarea>
                                     <label>Mô tả sản phẩm</label>
-                                    <?php if (isset($errors['processor'])) : ?>
+                                    <?php if (isset($errors['description'])) : ?>
                                         <span class="invalid-feedback">
-                                            <strong><?= $this->e($errors['processor']) ?></strong>
+                                            <strong><?= $this->e($errors['description']) ?></strong>
                                         </span>
                                     <?php endif ?>
                                 </div>
@@ -177,36 +184,44 @@
     }
 
     function previewImageProduct(event) {
-    const imageInput = event.target;
-    const previewContainer = document.getElementById("previewContainer");
+        const imageInput = event.target;
+        const previewContainer = document.getElementById("previewContainer");
 
-    // Xóa nội dung cũ trước khi hiển thị ảnh mới
-    previewContainer.innerHTML = "";
+        // Xóa nội dung cũ trước khi hiển thị ảnh mới
+        previewContainer.innerHTML = "";
 
-    // Kiểm tra nếu có ảnh được chọn
-    if (imageInput.files.length > 0) {
-        for (let file of imageInput.files) {
-            const reader = new FileReader();
+        // Kiểm tra nếu có ảnh được chọn
+        if (imageInput.files.length > 0) {
+            for (let file of imageInput.files) {
+                const reader = new FileReader();
 
-            reader.onload = function (e) {
-                // Tạo phần tử ảnh
-                const imgElement = document.createElement("img");
-                imgElement.src = e.target.result;
-                imgElement.classList.add("preview-image", "mt-2");
-                imgElement.style.border = "2px dashed #dee2e6";
-                imgElement.style.borderRadius = "0.5rem";
-                imgElement.style.maxWidth = "100px";
-                imgElement.style.marginRight = "10px";
+                reader.onload = function(e) {
+                    // Tạo phần tử ảnh
+                    const imgElement = document.createElement("img");
+                    imgElement.src = e.target.result;
+                    imgElement.classList.add("preview-image", "mt-2");
+                    imgElement.style.border = "2px dashed #dee2e6";
+                    imgElement.style.borderRadius = "0.5rem";
+                    imgElement.style.maxWidth = "100px";
+                    imgElement.style.marginRight = "10px";
 
-                // Thêm ảnh vào container
-                previewContainer.appendChild(imgElement);
-            };
+                    // Thêm ảnh vào container
+                    previewContainer.appendChild(imgElement);
+                };
 
-            // Đọc file dưới dạng URL
-            reader.readAsDataURL(file);
+                // Đọc file dưới dạng URL
+                reader.readAsDataURL(file);
+            }
         }
     }
-}
 
+    function addNumberField() {
+        let container = document.getElementById("numbersContainer");
+        let newInput = document.createElement("input");
+        newInput.type = "number";
+        newInput.name = "numbers[]";
+        newInput.placeholder = "Nhập số";
+        container.appendChild(newInput);
+    }
 </script>
 <?php $this->stop() ?>

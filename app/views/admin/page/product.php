@@ -65,7 +65,7 @@
             <?php endif; ?>
             <!-- FLASH MESSAGES -->
 
-            <a href="/admin/create" class="btn btn-success mb-3">
+            <a href="/admin/products/create" class="btn btn-success mb-3">
                 <i class="fas fa-plus-circle"></i> Add New Phone
             </a>
 
@@ -110,11 +110,11 @@
                             <td><?= $this->e(date("d-m-Y", strtotime($product->created_at))) ?></td>
                             <td class="text-center align-middle">
                                 <div class="d-flex justify-content-center align-items-center">
-                                    <a href="/admin/product/edit/<?= $brand['id'] ?>" class="btn btn-xs btn-warning">
+                                    <a href="<?= '/admin/products/edit/' . $this->e($product->id) ?>" class="btn btn-xs btn-warning">
                                         <i alt="Edit" class="fa fa-pencil"></i> Edit
                                     </a>
-                                    <form class="ms-2" action="/admin/product/delete/<?= $brand['id'] ?>" method="POST">
-                                        <button type="submit" class="btn btn-xs btn-danger" name="delete-brand">
+                                    <form class="ms-2" action="<?= '/admin/products/delete/' . $this->e($product->id) ?>" method="POST">
+                                        <button type="submit" class="btn btn-xs btn-danger" name="delete-product">
                                             <i alt="Delete" class="fa fa-trash"></i> Delete
                                         </button>
                                     </form>

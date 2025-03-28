@@ -19,9 +19,14 @@ $router->post('/register', '\\App\Controllers\Auth\RegisterController@store');
 $router->get('/login', '\App\Controllers\Auth\LoginController@create');
 $router->post('/login', '\App\Controllers\Auth\LoginController@store');
 
-// product routes
+// home routes
 $router->get('/', '\App\Controllers\User\HomeController@index');
 $router->get('/home', '\App\Controllers\User\HomeController@index');
+
+// product routes
+$router->get('/products', '\App\Controllers\User\ProductController@products');
+// productlist routes
+$router->get('/productlist', '\App\Controllers\User\Productlist@productlist');
 $router->set404('\App\Controllers\Controller@sendNotFound');
 
 // admin routes
@@ -29,8 +34,11 @@ $router->get('/admin', '\App\Controllers\Admin\ProductController@index');
 $router->get('/admin/user', '\App\Controllers\Admin\AdminController@users');
 // admin product routes
 $router->get('/admin/products', '\App\Controllers\Admin\ProductController@products');
-$router->get('/admin/create', '\App\Controllers\Admin\ProductController@create');
-$router->post('/admin/store', '\App\Controllers\Admin\ProductController@store');
+$router->get('/admin/products/create', '\App\Controllers\Admin\ProductController@create');
+$router->post('/admin/products/store', '\App\Controllers\Admin\ProductController@store');
+$router->get('/admin/products/edit/(\d+)', '\App\Controllers\Admin\ProductController@edit');
+$router->post('/admin/products/update/(\d+)', '\App\Controllers\Admin\ProductController@update');
+$router->post('/admin/products/delete/(\d+)', '\App\Controllers\Admin\ProductController@destroy');
 
 // Admin brand routes
 $router->get('/admin/brands', '\App\Controllers\Admin\BrandController@index');
