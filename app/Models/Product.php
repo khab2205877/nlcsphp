@@ -23,10 +23,10 @@ class Product
     {
         $this->db = $pdo;
     }
+
     public function all(): array
     {
         $products = [];
-
         $statement = $this->db->query("SELECT * FROM products");
         while ($row = $statement->fetch()) {
             $product = new Product($this->db);
@@ -39,15 +39,13 @@ class Product
     public function save(array $images = [], array $sizes = []): bool
     {
         try {
-            // Bắt đầu giao dịch
             $this->db->beginTransaction();
 
             if ($this->id >= 0) {
-                // Cập nhật sản phẩm nếu đã tồn tại
                 $statement = $this->db->prepare(
                     'UPDATE products SET name = :name, brand_id = :brand_id, price = :price, image = :image, discount_percent = :discount_percent, description = :description, material = :material, origin = :origin WHERE id = :id'
                 );
-                $result = $statement->execute([
+                $statement->execute([
                     'name' => $this->name,
                     'brand_id' => $this->brand_id,
                     'price' => $this->price,
@@ -59,15 +57,18 @@ class Product
                     'id' => $this->id
                 ]);
 
-                // Xóa dữ liệu cũ trong bảng `product_images` và `product_sizes`
-                $this->db->prepare('DELETE FROM product_images WHERE product_id = :product_id')->execute(['product_id' => $this->id]);
-                $this->db->prepare('DELETE FROM product_sizes WHERE product_id = :product_id')->execute(['product_id' => $this->id]);
+                if (!empty($images)) {
+                    $this->updateImages($images);
+                }
+
+                if (!empty($sizes)) {
+                    $this->updateSizes($sizes);
+                }
             } else {
-                // Thêm sản phẩm mới
                 $statement = $this->db->prepare(
                     'INSERT INTO products (name, brand_id, price, image, discount_percent, description, material, origin, created_at) VALUES (:name, :brand_id, :price, :image, :discount_percent, :description, :material, :origin, NOW())'
                 );
-                $result = $statement->execute([
+                $statement->execute([
                     'name' => $this->name,
                     'brand_id' => $this->brand_id,
                     'price' => $this->price,
@@ -78,45 +79,77 @@ class Product
                     'origin' => $this->origin
                 ]);
 
-                if ($result) {
-                    $this->id = $this->db->lastInsertId();
+                $this->id = $this->db->lastInsertId();
+
+                if (!empty($images)) {
+                    $this->addImages($images);
+                }
+
+                if (!empty($sizes)) {
+                    $this->addSizes($sizes);
                 }
             }
 
-            // Thêm hình ảnh vào bảng `product_images`
-            if (!empty($images)) {
-                $stmt = $this->db->prepare(
-                    'INSERT INTO product_images (product_id, image_path, created_at) VALUES (:product_id, :image_path, NOW())'
-                );
-                foreach ($images as $image) {
-                    $stmt->execute([
-                        'product_id' => $this->id,
-                        'image_path' => $image
-                    ]);
-                }
-            }
-
-            // Thêm kích thước vào bảng `product_sizes`
-            if (!empty($sizes)) {
-                $stmt = $this->db->prepare(
-                    'INSERT INTO product_sizes (product_id, size, created_at) VALUES (:product_id, :size, NOW())'
-                );
-                foreach ($sizes as $size) {
-                    $stmt->execute([
-                        'product_id' => $this->id,
-                        'size' => $size
-                    ]);
-                }
-            }
-
-            // Xác nhận giao dịch
             $this->db->commit();
             return true;
         } catch (\Exception $e) {
-            // Hủy giao dịch nếu có lỗi
             $this->db->rollBack();
             throw $e;
         }
+    }
+
+    private function updateImages(array $images): void
+    {
+        $this->db->prepare('DELETE FROM product_images WHERE product_id = :product_id')->execute(['product_id' => $this->id]);
+
+        $this->addImages($images);
+    }
+
+    private function addImages(array $images): void
+    {
+        $stmt = $this->db->prepare(
+            'INSERT INTO product_images (product_id, image_path, created_at) VALUES (:product_id, :image_path, NOW())'
+        );
+        foreach ($images as $image) {
+            $stmt->execute([
+                'product_id' => $this->id,
+                'image_path' => $image
+            ]);
+        }
+    }
+
+    public function getImages(): array
+    {
+        $stmt = $this->db->prepare('SELECT id, image_path FROM product_images WHERE product_id = :product_id');
+        $stmt->execute(['product_id' => $this->id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function updateSizes(array $sizes): void
+    {
+        $this->db->prepare('DELETE FROM product_sizes WHERE product_id = :product_id')->execute(['product_id' => $this->id]);
+
+        $this->addSizes($sizes);
+    }
+
+    private function addSizes(array $sizes): void
+    {
+        $stmt = $this->db->prepare(
+            'INSERT INTO product_sizes (product_id, size, created_at) VALUES (:product_id, :size, NOW())'
+        );
+        foreach ($sizes as $size) {
+            $stmt->execute([
+                'product_id' => $this->id,
+                'size' => $size
+            ]);
+        }
+    }
+
+    public function getSizes(): array
+    {
+        $stmt = $this->db->prepare('SELECT id, size FROM product_sizes WHERE product_id = :product_id');
+        $stmt->execute(['product_id' => $this->id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function delete(): bool

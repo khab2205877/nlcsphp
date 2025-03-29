@@ -53,213 +53,48 @@
                     <span>Giày Sneaker</span>
                 </h2>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a href="#home-tab-pane" class="nav-link-product active" id="home-tab" data-bs-toggle="tab"
-                            role="tab" aria-controls="home-tab-pane" aria-selected="true">Giày Nike</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a href="#profile-tab-pane" class="nav-link-product" id="profile-tab" data-bs-toggle="tab"
-                            role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profile</a>
-
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a href="#contact-tab-pane" class="nav-link-product" id="contact-tab" data-bs-toggle="tab"
-                            role="tab" aria-controls="contact-tab-pane" aria-selected="false">Contact</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a href="#disabled-tab-pane" class="nav-link-product" id="disabled-tab" data-bs-toggle="tab"
-                            role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a href="#disabled-tab-pane" class="nav-link-product" id="disabled-tab" data-bs-toggle="tab"
-                            role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Disabled</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a href="#disabled-tab-pane" class="nav-link-product" id="disabled-tab" data-bs-toggle="tab"
-                            role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Giay chinh hang
-                            khac</a>
-                    </li>
+                    <?php foreach ($brands as $index => $brand): ?>
+                        <li class="nav-item" role="presentation">
+                            <a href="#tab-<?= $this->e($brand['id']) ?>"
+                                class="nav-link-product <?= $index === 0 ? 'active' : '' ?>"
+                                id="tab-btn-<?= $this->e($brand['id']) ?>"
+                                data-bs-toggle="tab"
+                                role="tab"
+                                aria-controls="tab-<?= $this->e($brand['id']) ?>"
+                                aria-selected="<?= $index === 0 ? 'true' : 'false' ?>">
+                                <?= $this->e($brand['name']) ?>
+                            </a>
+                        </li>
+                    <?php endforeach ?>
                 </ul>
             </div>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                    <div class="row d-flex flex-wrap">
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
+                <?php foreach ($brands as $index => $brand): ?>
+                    <div class="tab-pane fade <?= $index === 0 ? 'show active' : '' ?>"
+                        id="tab-<?= $this->e($brand['id']) ?>"
+                        role="tabpanel"
+                        aria-labelledby="tab-btn-<?= $this->e($brand['id']) ?>"
+                        tabindex="0">
+                        <div class="row d-flex flex-wrap">
+                            <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
+                                <div class="card">
+                                    <div class="card-image">
+                                        <a href="/products">
+                                            <img src="/images/product_1.webp" class="card-img-top" alt="...">
+                                            <img src="/images/product_3.webp" alt="" class="rear-img">
                                         </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="card-title">
+                                            <a href="/products">Card title</a>
+                                        </h3>
+                                        <p class="card-text"><span>9,999,999₫</span></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                    <div class="row d-flex flex-wrap">
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
-                                        </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                    <div class="row d-flex flex-wrap">
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
-                                        </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
-                                        </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
-                                        </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
-                                        </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
-                                        </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-                    <div class="row d-flex flex-wrap">
-                        <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                            <div class="card">
-                                <div class="card-image">
-                                    <a href="#">
-                                        <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                        <img src="/images/product_3.webp" alt="" class="rear-img">
-                                    </a>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">
-                                            Card title
-                                        </a>
-                                    </h3>
-                                    <p class="card-text">
-                                        <span>9,999,999₫</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                <?php endforeach ?>
             </div>
         </div>
     </section>
@@ -443,6 +278,35 @@
 <?php $this->start("page_specific_js") ?>
 <script src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.0.8/r-3.0.2/sp-2.3.1/datatables.min.js"></script>
 <script>
-    
+    const tabs = document.querySelectorAll(".nav-link-product");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function(event) {
+            event.preventDefault();
+
+            // Xóa class active khỏi tất cả tab
+            tabs.forEach(t => t.classList.remove("active"));
+
+            // Ẩn tất cả nội dung tab
+            document.querySelectorAll(".tab-pane").forEach(pane => {
+                pane.classList.remove("show", "active");
+            });
+
+            // Thêm class active vào tab được click
+            this.classList.add("active");
+
+            // Hiển thị tab content tương ứng
+            const targetPane = document.querySelector(this.getAttribute("href"));
+            if (targetPane) {
+                targetPane.classList.add("show", "active");
+            }
+        });
+    });
+
+    // Kích hoạt tab đầu tiên nếu không có tab nào được chọn
+    if (!document.querySelector(".nav-link-product.active")) {
+        tabs[0].classList.add("active");
+        document.querySelector(".tab-pane").classList.add("show", "active");
+    }
 </script>
 <?php $this->stop() ?>

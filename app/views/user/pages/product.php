@@ -70,14 +70,6 @@
                         <li><span>41</span></li>
                     </ul>
                 </div>
-                <!-- <div class="detail__right__color">
-                            <p class="detail__right__list-header">color</p>
-                            <ul class="detail__right__list">
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                            </ul>
-                        </div> -->
                 <div class="detail__right__quantily">
                     <input type="button" value="-" class="btn-decrease">
                     <input type="text" name="product-quantily" value="1" disabled>

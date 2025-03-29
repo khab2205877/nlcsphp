@@ -9,7 +9,7 @@
         </div>
 
         <div class="card-body pt-0">
-            <form action="/admin/products/store" method="POST" enctype="multipart/form-data">
+            <form action="<?= '/admin/products/update/' . $this->e($data['id']) ?>" method="POST" enctype="multipart/form-data">
                 <!-- Main Content -->
                 <div class="row g-3">
                     <!-- Left Column -->
@@ -19,8 +19,8 @@
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input type="text" class="form-control form-control-custom <?= isset($errors['name']) ? ' is-invalid' : '' ?>" name="name"
-                                        placeholder="Tên điện thoại" value="<?= isset($old['name']) ? $this->e($old['name']) : '' ?>" required>
-                                    <label>Tên Điện Thoại</label>
+                                        placeholder="Tên điện thoại" value="<?= isset($data['name']) ? $this->e($data['name']) : '' ?>" required>
+                                    <label>Tên Sản Phẩm</label>
                                     <?php if (isset($errors['name'])) : ?>
                                         <span class="invalid-feedback">
                                             <strong><?= $this->e($errors['name']) ?></strong>
@@ -36,7 +36,7 @@
                                 <div class="form-floating">
                                     <select class="form-select form-control-custom <?= isset($errors['brand_id']) ? ' is-invalid' : '' ?>" name="brand_id">
                                         <?php foreach ($brands as $brand): ?>
-                                            <option value="<?= $brand['id'] ?>" <?= isset($old['brand_id']) && $old['brand_id'] == $brand['id'] ? 'selected' : '' ?>><?= $brand['name'] ?></option>
+                                            <option value="<?= $brand['id'] ?>" <?= isset($data['brand_id']) && $data['brand_id'] == $brand['id'] ? 'selected' : '' ?>><?= $brand['name'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                     <label>Thương Hiệu</label>
@@ -54,7 +54,7 @@
                             <div class="col-md-6 mt-0">
                                 <div class="form-floating">
                                     <input type="number" class="form-control form-control-custom <?= isset($errors['price']) ? ' is-invalid' : '' ?>" name="price"
-                                        value="<?= isset($old['price']) ? $this->e($old['price']) : '' ?>" placeholder="Giá" required>
+                                        value="<?= isset($data['price']) ? $this->e($data['price']) : '' ?>" placeholder="Giá" required>
                                     <label>Giá (VNĐ)</label>
                                     <?php if (isset($errors['price'])) : ?>
                                         <span class="invalid-feedback">
@@ -66,7 +66,7 @@
                             <div class="col-md-6 mt-0">
                                 <div class="form-floating">
                                     <input type="number" class="form-control form-control-custom <?= isset($errors['discount_percent']) ? ' is-invalid' : '' ?>"
-                                        value="<?= isset($old['discount_percent']) ? $this->e($old['discount_percent']) : '' ?>" name="discount_percent" placeholder="Giảm giá" min="0" max="100">
+                                        value="<?= isset($data['discount_percent']) ? $this->e($data['discount_percent']) : '' ?>" name="discount_percent" placeholder="Giảm giá" min="0" max="100">
                                     <label>Giảm Giá (%)</label>
                                     <?php if (isset($errors['discount_percent'])) : ?>
                                         <span class="invalid-feedback">
@@ -83,8 +83,17 @@
                                     <input type="file" class="form-control <?= isset($errors['image']) ? ' is-invalid' : '' ?>" name="image" id="imageInput" accept="image/*"
                                         onchange="previewImage(event)">
                                     <label>Hình Ảnh</label>
+                                    <input type="hidden" name="existing_image" value="<?= $this->e($data['image']) ?>">
                                 </div>
                                 <img id="preview" class="preview-image mt-3" style="display: none; border: 2px dashed #dee2e6; border-radius: 0.5rem; max-width: 100px;">
+                                <?php if (isset($data['image'])) : ?>
+                                    <div class="mt-3">
+                                        <label>Hình Ảnh Hiện Tại</label>
+                                    </div>
+                                    <div class="mt-3">
+                                        <img src="<?= $this->e($data['image']) ?>" class="img-fluid" style="border: 2px dashed #dee2e6; border-radius: 0.5rem; max-width: 100px;">
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -101,13 +110,18 @@
                                     <label>Hình Ảnh</label>
                                 </div>
                                 <div id="previewContainer" class=""></div>
+                                <div class="mt-3">
+                                    <?php foreach ($product_images as $image): ?>
+                                        <img src="<?= $this->e($image['image_path']) ?>" class="img-fluid" style="border: 2px dashed #dee2e6; border-radius: 0.5rem; max-width: 100px;">
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
 
                             <!-- Material & Origin -->
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="text" class="form-control form-control-custom <?= isset($errors['material']) ? ' is-invalid' : '' ?>" name="material"
-                                        value="<?= isset($old['material']) ? $this->e($old['material']) : '' ?>" placeholder="Chất liệu">
+                                        value="<?= isset($data['material']) ? $this->e($data['material']) : '' ?>" placeholder="Chất liệu">
                                     <label>Chất liệu</label>
                                     <?php if (isset($errors['material'])) : ?>
                                         <span class="invalid-feedback">
@@ -119,7 +133,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="text" class="form-control form-control-custom <?= isset($errors['origin']) ? ' is-invalid' : '' ?>" name="origin"
-                                        value="<?= isset($old['origin']) ? $this->e($old['origin']) : '' ?>" placeholder="Xuất xứ" required>
+                                        value="<?= isset($data['origin']) ? $this->e($data['origin']) : '' ?>" placeholder="Xuất xứ" required>
                                     <label>Xuất Xứ</label>
                                     <?php if (isset($errors['origin'])) : ?>
                                         <span class="invalid-feedback">
@@ -129,24 +143,36 @@
                                 </div>
                             </div>
                             <!-- size -->
-                            
                             <div class="col-12">
                                 <div class="form-floating">
                                     <div id="numbersContainer" style="display: flex; flex-wrap: wrap;">
-                                        <div class="size-input-wrapper mb-2 me-2" style="display: flex; align-items: center;">
-                                            <input type="number" step="any" class="form-control form-control-custom" name="sizes[]"
-                                                placeholder="Nhập size" style="max-width: 150px;" min="0">
-                                            <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeNumberField(this)">Xóa</button>
-                                        </div>
+                                        <?php if (!empty($product_sizes)): ?>
+                                            <?php foreach ($product_sizes as $index => $size): ?>
+                                                <div class="size-input-wrapper mb-2 me-2" style="display: flex; align-items: center;">
+                                                    <input type="number" step="any" class="form-control form-control-custom" name="sizes[]"
+                                                        value="<?= $this->e($size['size']) ?>" placeholder="Nhập size" style="max-width: 150px;" min="1">
+                                                    <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeNumberField(this)">Xóa</button>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="size-input-wrapper mb-2 me-2" style="display: flex; align-items: center;">
+                                                <input type="number" step="any" class="form-control form-control-custom" name="sizes[]"
+                                                    placeholder="Nhập size" style="max-width: 150px;" min="1">
+                                                <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeNumberField(this)">Xóa</button>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                     <button type="button" class="btn btn-info mt-2" onclick="addNumberField()">Thêm size</button>
                                 </div>
                             </div>
+
                             <!-- Description -->
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea type="text" class="form-control form-control-custom <?= isset($errors['description']) ? ' is-invalid' : '' ?>" name="description"
-                                        value="<?= isset($old['description']) ? $this->e($old['description']) : '' ?>" placeholder="Mô tả sản phẩm" style="height: 130px"></textarea>
+                                    <textarea class="form-control form-control-custom <?= isset($errors['description']) ? ' is-invalid' : '' ?>"
+                                        name="description"
+                                        placeholder="Mô tả sản phẩm"
+                                        style="height: 130px"><?= isset($data['description']) ? $this->e($data['description']) : '' ?></textarea>
                                     <label>Mô tả sản phẩm</label>
                                     <?php if (isset($errors['description'])) : ?>
                                         <span class="invalid-feedback">
@@ -229,6 +255,7 @@
         newInput.placeholder = "Nhập size";
         newInput.classList.add("form-control", "form-control-custom");
         newInput.style.maxWidth = "150px";
+        newInput.min = "1";
 
         let removeButton = document.createElement("button");
         removeButton.type = "button";
@@ -244,8 +271,24 @@
     }
 
     function removeNumberField(button) {
-        let wrapper = button.parentElement; 
-        wrapper.remove(); 
+        let wrapper = button.parentElement;
+        wrapper.remove();
     }
+
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            autoResizeTextarea(textarea);
+
+            textarea.addEventListener('input', function() {
+                autoResizeTextarea(textarea);
+            });
+        });
+    });
 </script>
 <?php $this->stop() ?>

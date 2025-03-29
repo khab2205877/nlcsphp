@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Models\Product;
 use App\Models\Brand;
+use PDO;
 
 class ProductController extends Controller
 {
@@ -40,18 +41,75 @@ class ProductController extends Controller
         $model_errors = $newProduct->validate($data);
 
         if (empty($model_errors)) {
-            $newProduct->fill($data)->save();
-            $productId = $newProduct->id;
-            if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-                $this->handleMultipleImages($productId, $_FILES['images']);
-            }
+            $sizes = $_POST['sizes'] ?? [];
+            $sizes = array_filter($sizes, function ($size) {
+                return $size >= 0;
+            });
+            $images = $this->handleFileUploads($_FILES['images'] ?? []);
+            $newProduct->fill($data)->save($images, $sizes);
 
             $_SESSION['success_Mess'] = 'Bạn đã thêm sản phẩm thành công';
             redirect('/admin/products');
         }
 
         $this->saveFormValues($_POST);
-        redirect('/admin/create', ['errors' => $model_errors]);
+        redirect('/admin/products/create', ['errors' => $model_errors]);
+    }
+
+    public function edit($productId)
+    {
+        $productModel = new Product(PDO());
+        $product = $productModel->find($productId);
+        if (!$product) {
+            $this->sendNotFound();
+        }
+        $brandModel = new Brand(PDO());
+        $brands = $brandModel->all();
+
+        $productImages = $product->getImages();
+
+        $productSizes = $product->getSizes();
+
+        $from_values = $this->getSavedFormValues();
+        $data = [
+            'errors' => session_get_once('errors'),
+            'old' => $from_values,
+            'data' => (!empty($from_values)) ? array_merge($from_values, ['id' => $product->id]) : (array) $product,
+            'brands' => $brands,
+            'product_images' => $productImages,
+            'product_sizes' => $productSizes
+        ];
+
+        $this->sendPage('page/edit_product', $data);
+    }
+
+    public function update($productId)
+    {
+        $productModel = new Product(PDO());
+        $product = $productModel->find($productId);
+        if (!$product) {
+            $this->sendNotFound();
+        }
+
+        $data = $this->filterProductData($_POST);
+        $model_errors = $product->validate($data);
+        if (empty($model_errors)) {
+            $sizes = $_POST['sizes'] ?? null;
+            $sizes = array_filter($sizes, function ($size) {
+                return $size >= 0;
+            });
+            if (empty($sizes)) {
+                $sizes = $product->getSizes();
+            }
+            $images = $this->handleFileUploads($_FILES['images'] ?? []);
+            $product->fill($data)->save($images, $sizes);
+
+            $_SESSION['success_Mess'] = 'Bạn đã cập nhật sản phẩm thành công';
+            redirect('/admin/products');
+        }
+
+        $this->saveFormValues($_POST);
+        redirect('admin/products/edit/' . $productId, ['errors' => $model_errors]);
     }
 
     public function destroy($productId)
@@ -62,9 +120,12 @@ class ProductController extends Controller
         if (!$product) {
             $this->sendNotFound();
         }
-        $imagePath = __DIR__ . '/../../../public' . ltrim($product->image, '/');
-        if ($imagePath && file_exists($imagePath)) {
-            unlink($imagePath);
+
+        if (!empty($product->image)) {
+            $imagePath = __DIR__ . '/../../../public/' . ltrim($product->image, '/');
+            if (file_exists($imagePath) && is_writable($imagePath)) {
+                unlink($imagePath);
+            }
         }
 
         $pdo = PDO();
@@ -73,13 +134,13 @@ class ProductController extends Controller
         $images = $stmt->fetchAll();
 
         foreach ($images as $image) {
-            $imagePath = __DIR__ . '/../../../public' . ltrim($image['image_path'], '/');
-            if ($imagePath && file_exists($imagePath)) {
-                unlink($imagePath);
+            if (!empty($image['image_path'])) {
+                $imagePath = __DIR__ . '/../../../public/' . ltrim($image['image_path'], '/');
+                if (file_exists($imagePath) && is_writable($imagePath)) {
+                    unlink($imagePath);
+                }
             }
         }
-        $stmt = $pdo->prepare('DELETE FROM product_images WHERE product_id = :product_id');
-        $stmt->execute(['product_id' => $productId]);
 
         $product->delete();
         $_SESSION['success_Mess'] = 'Bạn đã xóa sản phẩm thành công';
@@ -118,30 +179,26 @@ class ProductController extends Controller
             'description' => $data['description'] ?? '',
         ];
     }
-    protected function handleMultipleImages($productId, $images)
+    protected function handleFileUploads(array $files): array
     {
+        $uploadedPaths = [];
         $uploadDir = __DIR__ . '/../../../public/uploads/';
 
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
 
-        foreach ($images['name'] as $key => $imageName) {
-            if ($images['error'][$key] === UPLOAD_ERR_OK) {
-                $fileName = time() . '_' . basename($imageName);
-                $imagePath = '/uploads/' . $fileName;
+        foreach ($files['name'] as $key => $fileName) {
+            if ($files['error'][$key] === UPLOAD_ERR_OK) {
+                $uniqueFileName = time() . '_' . basename($fileName);
+                $destination = $uploadDir . $uniqueFileName;
 
-                $destination = $uploadDir . $fileName;
-
-                if (move_uploaded_file($images['tmp_name'][$key], $destination)) {
-                    $pdo = PDO();
-                    $stmt = $pdo->prepare('INSERT INTO product_images (product_id, image_path) VALUES (:product_id, :image_path)');
-                    $stmt->execute([
-                        'product_id' => $productId,
-                        'image_path' => $imagePath
-                    ]);
+                if (move_uploaded_file($files['tmp_name'][$key], $destination)) {
+                    $uploadedPaths[] = '/uploads/' . $uniqueFileName;
                 }
             }
         }
+
+        return $uploadedPaths;
     }
 }

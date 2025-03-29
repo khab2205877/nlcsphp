@@ -92,7 +92,7 @@
               <div class="loginName" data-bs-toggle="dropdown">
                 <a class="login-button" href="#"><?= $this->e(AUTHGUARD()->userName()) ?></a>
               </div>
-              <div class="dropdown-menu">
+              <div class="dropdown-menu" style="min-width: 100px; width: 100%; margin-left: 5px">
                 <a class="dropdown-item" href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                   Logout
                 </a>

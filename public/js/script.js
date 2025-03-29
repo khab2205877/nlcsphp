@@ -1,21 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Swiper
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 4,
-        slidesPerGroupSkip: 4,
-        grabCursor: true,
-        loop: true,
-        breakpoints: {
-            0: { slidesPerView: 1 },
-            520: { slidesPerView: 2 },
-            769: { slidesPerView: 3 },
-            1000: { slidesPerView: 4 },
-        },
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-    });
+    // var swiper = new Swiper(".mySwiper", {
+    //     slidesPerView: 4,
+    //     slidesPerGroupSkip: 4,
+    //     grabCursor: true,
+    //     loop: true,
+    //     breakpoints: {
+    //         0: { slidesPerView: 1 },
+    //         520: { slidesPerView: 2 },
+    //         769: { slidesPerView: 3 },
+    //         1000: { slidesPerView: 4 },
+    //     },
+    //     navigation: {
+    //         nextEl: ".swiper-button-next",
+    //         prevEl: ".swiper-button-prev",
+    //     },
+    // });
 
     // Search Toggle
     const searchToggle = document.querySelector(".searchToggle");
