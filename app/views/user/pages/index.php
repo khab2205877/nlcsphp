@@ -284,18 +284,14 @@
         tab.addEventListener("click", function(event) {
             event.preventDefault();
 
-            // Xóa class active khỏi tất cả tab
             tabs.forEach(t => t.classList.remove("active"));
 
-            // Ẩn tất cả nội dung tab
             document.querySelectorAll(".tab-pane").forEach(pane => {
                 pane.classList.remove("show", "active");
             });
 
-            // Thêm class active vào tab được click
             this.classList.add("active");
 
-            // Hiển thị tab content tương ứng
             const targetPane = document.querySelector(this.getAttribute("href"));
             if (targetPane) {
                 targetPane.classList.add("show", "active");
@@ -303,7 +299,6 @@
         });
     });
 
-    // Kích hoạt tab đầu tiên nếu không có tab nào được chọn
     if (!document.querySelector(".nav-link-product.active")) {
         tabs[0].classList.add("active");
         document.querySelector(".tab-pane").classList.add("show", "active");
