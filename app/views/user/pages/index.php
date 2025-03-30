@@ -1,4 +1,8 @@
-<?php $this->layout("layouts/default", ["title" => APPNAME]) ?>
+<?php
+
+use App\Models\Product;
+
+$this->layout("layouts/default", ["title" => APPNAME]) ?>
 
 <?php $this->start("page_specific_css") ?>
 <link href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.0.8/r-3.0.2/sp-2.3.1/datatables.min.css" rel="stylesheet">
@@ -61,7 +65,7 @@
                                 data-bs-toggle="tab"
                                 role="tab"
                                 aria-controls="tab-<?= $this->e($brand['id']) ?>"
-                                aria-selected="<?= $index === 0 ? 'true' : 'false' ?>">
+                                aria-selected="<?= $index === 0 ? 'true' : 'false' ?>">Giày
                                 <?= $this->e($brand['name']) ?>
                             </a>
                         </li>
@@ -76,25 +80,42 @@
                         aria-labelledby="tab-btn-<?= $this->e($brand['id']) ?>"
                         tabindex="0">
                         <div class="row d-flex flex-wrap">
-                            <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <a href="/products">
-                                            <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                            <img src="/images/product_3.webp" alt="" class="rear-img">
-                                        </a>
+                            <?php if (!empty($productsByBrand[$brand['id']])): ?>
+                                <?php foreach ($productsByBrand[$brand['id']] as $product): ?>
+                                    <?php
+                                    $original_price = $product->price;
+                                    $discounted_price = $original_price * (1 - $product->discount_percent / 100);
+                                    ?>
+                                    <div class="d-flex flex-column col-lg-2 col-md-3 col-sm-4 col-6 product-block">
+                                        <div class="card">
+                                            <div class="card-image">
+                                                <a href="/products/<?= $this->e($product->id) ?>">
+                                                    <img src="<?= $this->e($product->image) ?>" class="card-img-top" alt="<?= $this->e($product->name) ?>">
+                                                    <!-- <img src="/images/product_1.webp" alt="" class="rear-img"> -->
+                                                </a>
+                                            </div>
+                                            <div class="card-body">
+                                                <h3 class="card-title">
+                                                    <a href="/products/<?= $this->e($product->id) ?>"><?= $this->e($product->name) ?></a>
+                                                </h3>
+                                                <p class="card-text">
+                                                    <span><?= number_format($discounted_price, 0, ',', '.') ?>₫</span>
+                                                    <del><?= number_format($original_price, 0, ',', '.') ?>₫</del>
+                                                </p>
+
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <h3 class="card-title">
-                                            <a href="/products">Card title</a>
-                                        </h3>
-                                        <p class="card-text"><span>9,999,999₫</span></p>
-                                    </div>
-                                </div>
-                            </div>
+                                <?php endforeach ?>
+                            <?php else: ?>
+                                <p class="text-center">Không có sản phẩm nào.</p>
+                            <?php endif ?>
                         </div>
                     </div>
                 <?php endforeach ?>
+            </div>
+            <div class="d-grid col-3 mx-auto my-2" style="height: 40px; width: 200px;">
+                <a href="/product-list" role="button" class="btn btn-dark">Xem tất cả</a>
             </div>
         </div>
     </section>

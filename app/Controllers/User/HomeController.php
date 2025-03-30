@@ -11,8 +11,19 @@ class HomeController extends Controller
     {
         $brandModel = new Brand(PDO());
         $brands = $brandModel->all();
+
+        $productModel = new Product(PDO());
+        $productsByBrand = [];
+
+        foreach ($brands as $brand) {
+            $productsByBrand[$brand['id']] = $productModel->findByBrand($brand['id']);
+        }
+
         $this->sendPage('pages/index', [
-            'brands' => $brands
+            'brands' => $brands,
+            'productsByBrand' => $productsByBrand,
         ]);
     }
+
+    
 }

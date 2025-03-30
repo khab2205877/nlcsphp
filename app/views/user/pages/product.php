@@ -10,7 +10,7 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Library</li>
             </ol>
         </nav>
@@ -21,53 +21,45 @@
                 <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
                         <button type="button" data-bs-target="#carouselExampleInterval" data-bs-slide-to="0"
-                            class="active" aria-current="true" aria-label="Slide 1">
-                            <img src="/images/product_1.webp" alt="" class="img-fluid">
+                            class="active">
+                            <img src="<?= $this->e($product->image) ?>" alt="<?= $this->e($product->name) ?>" class="img-fluid">
                         </button>
-                        <button type="button" data-bs-target="#carouselExampleInterval" data-bs-slide-to="1"
-                            aria-label="Slide 2">
-                            <img src="/images/product_2.webp" alt="" class="img-fluid">
-                        </button>
-                        <button type="button" data-bs-target="#carouselExampleInterval" data-bs-slide-to="2"
-                            aria-label="Slide 3">
-                            <img src="/images/product_3.webp" alt="" class="img-fluid">
-                        </button>
+                        <?php foreach ($productImages as $index => $image): ?>
+                            <button type="button" data-bs-target="#carouselExampleInterval" data-bs-slide-to="<?= $index + 1 ?>">
+                                <img src="<?= $this->e($image['image_path']) ?>" alt="Ảnh sản phẩm" class="img-fluid">
+                            </button>
+                        <?php endforeach ?>
                     </div>
                     <div class="carousel-inner">
-                        <div class="carousel-item active" data-bs-interval="1000">
-                            <img src="/images/product_1.webp" class="d-block w-100" alt="...">
+                        <div class="carousel-item active" data-bs-interval="2000">
+                            <img src="<?= $this->e($product->image) ?>" class="d-block w-100" alt="Ảnh sản phẩm">
                         </div>
-                        <div class="carousel-item" data-bs-interval="500">
-                            <img src="/images/product_2.webp" class="d-block w-100" alt="...">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="/images/product_3.webp" class="d-block w-100" alt="...">
-                        </div>
+                        <?php foreach ($productImages as $image): ?>
+                            <div class="carousel-item" data-bs-interval="2000">
+                                <img src="<?= $this->e($image['image_path']) ?>" class="d-block w-100" alt="Ảnh sản phẩm">
+                            </div>
+                        <?php endforeach ?>
                     </div>
                 </div>
             </div>
             <div class="detail__right col-lg-7 col-md-6">
-                <h1 class="detail__right__header">Nike Air Force 1</h1>
+                <h1 class="detail__right__header"><?= $this->e($product->name) ?></h1>
                 <div class="d-flex product-info">
                     <div class="pro-band">
                         <span>Thương hiệu: </span>
-                        <a class="title" href="#">Nike</a>
-                    </div>
-                    <span class="line-info">|</span>
-                    <div class="pro-type">
-                        <span>Loại: </span>
-                        <a class="title" href="#">Hàng Có Sẵn</a>
+                        <a class="title" href="#"><?= $this->e($brandName) ?></a>
                     </div>
                 </div>
-                <p class="detail__right__price">$68.00</p>
+                <div class="detail__right__price">
+                    <span class="price-now"><?= number_format($discountedPrice, 0, ',', '.') ?>₫</span>
+                    <span class="price-compare"><del><?= number_format($product->price, 0, ',', '.') ?>₫</del></span>
+                </div>
                 <div class="detail__right__size select-option">
                     <p class="detail__right__list-header">size</p>
                     <ul class="detail__right__list">
-                        <li><span>37</span></li>
-                        <li><span>38</span></li>
-                        <li><span>39</span></li>
-                        <li><span>40</span></li>
-                        <li><span>41</span></li>
+                        <?php foreach ($productSizes as $size): ?>
+                            <li><span><?= $this->e($size['size'] == intval($size['size'])) ? intval($size['size']) : $size['size'] ?></span></li>
+                        <?php endforeach ?>
                     </ul>
                 </div>
                 <div class="detail__right__quantily">
@@ -135,30 +127,22 @@
                         <div id="collapse1" class="accordion-collapse collapse show">
                             <div class="accordion-body" data-tab-content="tab1">
                                 <p>
-                                    <strong><a href="#">Giày Nike</a> Air Force 1 ’07 M All White</strong>
+                                    <strong><a href="#">Giày Nike</a> <?= $this->e($product->name) ?></strong>
+                                </p>
+                                <p><?= $this->e($product->description) ?></p>
+                                <p>
+                                    <strong>Thương hiệu</strong>: <?= $this->e($brandName) ?>
                                 </p>
                                 <p>
-                                    Nike Air Force 1 ’07 M All White CW2288-111 – giày trắng thì có gì thú vị?
-                                    Đầu tiên, bạn sẽ tha hồ biến hóa cùng các loại quần áo, phụ kiện đa dạng để
-                                    cho ra một outfit ưng ý nhất. Mặt khác, đây lại là đôi giày lý tưởng vào một
-                                    ngày bạn cảm thấy quá “lười” để dành thời gian lựa chọn, cân nhắc giữa cả
-                                    chồng trang phục. Và cuối cùng, một đôi giày đơn giản nhưng không đơn điệu,
-                                    cho cảm giác trên chân êm ái, thoải mái vận động, có lẽ là ứng cử viên sáng
-                                    giá để bạn bổ sung vào tủ đồ của mình.
+                                    <strong>Chất liệu</strong>: <?= $this->e($product->material) ?>
                                 </p>
                                 <p>
-                                    <strong>Thương hiệu</strong>: Nike
-                                </p>
-                                <p>
-                                    <strong>Chất liệu</strong>: Da cao cấp
-                                </p>
-                                <p>
-                                    <strong>Xuất xứ</strong>: Mỹ
+                                    <strong>Xuất xứ</strong>: <?= $this->e($product->origin) ?>
                                 </p>
                                 <p>
                                     <strong>Tình trạng</strong>: Hàng Fullbox - New 100%
                                 </p>
-                                <div>
+                                <!-- <div>
                                     <p style="text-align: center;">
                                         <img src="/images/product_banner_1.webp" alt="" width="600"
                                             height="600">
@@ -166,7 +150,7 @@
                                     <p style="text-align: center;">
                                         <img src="/images/product_2.webp" alt="" width="600" height="600">
                                     </p>
-                                </div>
+                                </div> -->
                                 <div>&nbsp;</div>
                             </div>
                         </div>

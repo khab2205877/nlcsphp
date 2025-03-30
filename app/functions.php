@@ -25,7 +25,6 @@ if (!function_exists('dd')) {
 }
 
 if (!function_exists('redirect')) {
-  // Chuyển hướng đến một trang khác
   function redirect($location, array $data = [])
   {
     foreach ($data as $key => $value) {
@@ -38,7 +37,6 @@ if (!function_exists('redirect')) {
 }
 
 if (!function_exists('session_get_once')) {
-  // Đọc và xóa một biến trong $_SESSION
   function session_get_once($name, $default = null)
   {
     $value = $default;

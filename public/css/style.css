@@ -194,12 +194,13 @@ section .banner {
     font-weight: 400;
 }
 
-.search-field i {
+.search-field button {
     position: absolute;
     color: #0693e3;
     right: 15px;
     font-size: 22px;
-    cursor: pointer;
+    border: none;
+    background: none;
     transition: all 0.3s ease;
 }
 
@@ -673,7 +674,26 @@ h3 {
 }
 
 .detail__right__price {
-    font-size: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.detail__right__price .price-now {
+    font-size: 22px;
+    color: #ff0000;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.detail__right__price .price-compare {
+    margin-right: 15px;
+}
+
+.detail__right__price .price-compare del {
+    font-size: 16px;
+    color: #919191;
+    font-weight: 500;
 }
 
 .detail__right__short-description {

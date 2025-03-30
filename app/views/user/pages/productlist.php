@@ -31,78 +31,21 @@
                                     </h4>
                                     <div class="group-filter" id="categories" style="display: block;">
                                         <ul class="scrollbar">
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
+                                            <li class="item active">
+                                                <input type="" name="" id="">
+                                                <a href="/product-list" class="cust-checkbox-label">
+                                                    Tất cả
                                                     <span class="cust-check"></span>
                                                 </a>
                                             </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
-                                            <li class="item">
-                                                <a href="" class="cust-checkbox-label">
-                                                    Nike
-                                                    <span class="cust-check"></span>
-                                                </a>
-                                            </li>
+                                            <?php foreach ($brands as $brand): ?>
+                                                <li class="item">
+                                                    <a href="/product-list/<?= $this->e($brand['name']) ?>" class="cust-checkbox-label">
+                                                        <?= $this->e($brand['name']) ?>
+                                                        <span class="cust-check"></span>
+                                                    </a>
+                                                </li>
+                                            <?php endforeach ?>
                                         </ul>
                                     </div>
                                 </div>
@@ -145,27 +88,16 @@
                                     <div class="group-filter" style="display: block;">
                                         <div class="layered-content bl-filter filter-size s-filter">
                                             <ul class="check-box-list scrollbar">
-                                                <li>
-                                                    <label for="">
-                                                        <input type="checkbox" name="" id="">
-                                                        37
-                                                        <span class="cust-check"></span>
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <label for="">
-                                                        <input type="checkbox" name="" id="">
-                                                        38
-                                                        <span class="cust-check"></span>
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <label for="">
-                                                        <input type="checkbox" name="" id="">
-                                                        39
-                                                        <span class="cust-check"></span>
-                                                    </label>
-                                                </li>
+                                                <?php foreach ($sizes as $size): ?>
+                                                    <?php $formattedSize = (fmod(floatval($size), 1) == 0) ? intval($size) : $size; ?>
+                                                    <li>
+                                                        <label>
+                                                            <input type="checkbox" name="sizes[]" id="size_<?= htmlspecialchars($size) ?>" value="<?= htmlspecialchars($size) ?>">
+                                                            <?= htmlspecialchars($formattedSize) ?>
+                                                            <span class="cust-check"></span>
+                                                        </label>
+                                                    </li>
+                                                <?php endforeach; ?>
                                             </ul>
                                         </div>
                                     </div>
@@ -186,116 +118,44 @@
                                     Bộ lọc
                                 </button>
                                 <div class="wrap-box-sort">
-                                    <label for="SortBy">Sắp xếp:</label>
+                                    <!-- <label for="SortBy">Sắp xếp:</label>
                                     <select class="sort-by custom-dropdown__select">
                                         <option value="">Sản phẩm nổi bật</option>
                                         <option value="">Giá: Tăng dần</option>
                                         <option value="">Giá: Giảm dần</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                             </div>
                         </div>
                         <div class="content-product-list row d-flex flex-wrap">
-                            <div class="d-flex flex-column col-md-3 col-sm-4 col-6 product-block">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <a href="#">
-                                            <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                            <img src="/images/product_3.webp" alt="" class="rear-img">
-                                        </a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 class="card-title">
-                                            <a href="#">
-                                                Card title
+                            <?php foreach ($products as $product): ?>
+                                <?php
+                                $original_price = $product->price;
+                                $discounted_price = $original_price * (1 - $product->discount_percent / 100);
+                                ?>
+                                <div class="d-flex flex-column col-md-3 col-sm-4 col-6 product-block">
+                                    <div class="card">
+                                        <div class="card-image">
+                                            <a href="/products/<?= $this->e($product->id) ?>">
+                                                <img src="<?= $this->e($product->image) ?>" class="card-img-top" alt="...">
+                                                <img src="/images/product_3.webp" alt="" class="rear-img">
                                             </a>
-                                        </h3>
-                                        <p class="card-text">
-                                            <span>9,999,999₫</span>
-                                        </p>
+                                        </div>
+                                        <div class="card-body">
+                                            <h3 class="card-title">
+                                                <a href="/products/<?= $this->e($product->id) ?>">
+                                                    <?= $this->e($product->name) ?>
+                                                </a>
+                                            </h3>
+                                            <p class="card-text">
+                                                <span><?= number_format($discounted_price, 0, ',', '.') ?>₫</span>
+                                                <del><?= number_format($original_price, 0, ',', '.') ?>₫</del>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex flex-column col-md-3 col-sm-4 col-6 product-block">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <a href="#">
-                                            <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                            <img src="/images/product_3.webp" alt="" class="rear-img">
-                                        </a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 class="card-title">
-                                            <a href="#">
-                                                Card title
-                                            </a>
-                                        </h3>
-                                        <p class="card-text">
-                                            <span>9,999,999₫</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column col-md-3 col-sm-4 col-6 product-block">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <a href="#">
-                                            <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                            <img src="/images/product_3.webp" alt="" class="rear-img">
-                                        </a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 class="card-title">
-                                            <a href="#">
-                                                Card title
-                                            </a>
-                                        </h3>
-                                        <p class="card-text">
-                                            <span>9,999,999₫</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column col-md-3 col-sm-4 col-6 product-block">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <a href="#">
-                                            <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                            <img src="/images/product_3.webp" alt="" class="rear-img">
-                                        </a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 class="card-title">
-                                            <a href="#">
-                                                Card title
-                                            </a>
-                                        </h3>
-                                        <p class="card-text">
-                                            <span>9,999,999₫</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column col-md-3 col-sm-4 col-6 product-block">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <a href="#">
-                                            <img src="/images/product_1.webp" class="card-img-top" alt="...">
-                                            <img src="/images/product_3.webp" alt="" class="rear-img">
-                                        </a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 class="card-title">
-                                            <a href="#">
-                                                Card title
-                                            </a>
-                                        </h3>
-                                        <p class="card-text">
-                                            <span>9,999,999₫</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php endforeach ?>
+
                         </div>
                     </div>
                 </div>

@@ -7,45 +7,51 @@ use App\Controllers\User\Controller;
 
 class RegisterController extends Controller
 {
-    public function create()
-    {
-        $data = [
-            'messages' => session_get_once('messages'),
-            'old' => $this->getSavedFormValues(),
-            'errors' => session_get_once('errors')
-        ];
-
-        $this->sendPage('auth/register', $data);
+  public function __construct()
+  {
+    if (AUTHGUARD()->isUserLoggedIn()) {
+      redirect('/home');
     }
 
-    public function store()
-    {
-        $user_data = $this->filterUserData($_POST);
+    parent::__construct();
+  }
 
-        $user = new User(PDO());
-        $errors = $user->validate($user_data);
+  public function create()
+  {
+    $data = [
+      'old' => $this->getSavedFormValues(),
+      'errors' => session_get_once('errors')
+    ];
 
-        if (empty($errors)) {
-            $user->fill($user_data);
-            if ($user->save()) {
-                $_SESSION['success_Mess'] = 'Bạn đã đăng ký thành công!';
-                redirect('/login');
-            } else {
-                $errors['general'] = 'Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại.';
-            }
-        }
+    $this->sendPage('auth/register', $data);
+  }
 
-        $this->saveFormValues($_POST, ['password', 'password_confirmation']);
-        redirect('/register', ['errors' => $errors]);
+  public function store()
+  {
+    
+    $this->saveFormValues($_POST, ['password', 'password_confirmation']);
+
+    $data = $this->filterUserData($_POST);
+    $newUser = new User(PDO());
+    $model_errors = $newUser->validate($data);
+    if (empty($model_errors)) {
+      $newUser->fill($data)->save();
+
+      $messages = ['success' => 'User has been created successfully.'];
+      $_SESSION['success_Mess'] = 'Bạn đã đăng kí thành công';
+      redirect('/login', ['messages' => $messages]);
     }
 
-    protected function filterUserData(array $data)
-    {
-        return [
-            'email' => filter_var($data['email'], FILTER_VALIDATE_EMAIL),
-            'name' => $data['name'] ?? '',
-            'password' => $data['password'] ?? '',
-            'password_confirmation' => $data['password_confirmation'] ?? ''
-        ];
-    }
+    redirect('/register', ['errors' => $model_errors]);
+  }
+
+  protected function filterUserData(array $data)
+  {
+    return [
+      'name' => $data['name'] ?? null,
+      'email' => filter_var($data['email'], FILTER_VALIDATE_EMAIL),
+      'password' => $data['password'] ?? null,
+      'password_confirmation' => $data['password_confirmation'] ?? null
+    ];
+  }
 }

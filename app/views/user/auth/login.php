@@ -27,7 +27,7 @@
                         </div>
                         <form action="/login" method="post">
                             <div class="input-group mb-3">
-                                <input id="email" type="email" class="form-control form-control-lg bg-light fs-6" <?= isset($errors['email']) ? 'is-invalid' : '' ?>" name="email" value="<?= isset($old['email']) ? $this->e($old['email']) : '' ?>" required autofocus placeholder="Email">
+                                <input id="email" type="email" class="form-control form-control-lg bg-light fs-6 <?= isset($errors['email']) ? 'is-invalid' : '' ?>" name="email" value="<?= isset($old['email']) ? $this->e($old['email']) : '' ?>" required autofocus placeholder="Email">
                                 <?php if (isset($errors['email'])) : ?>
                                     <span class="invalid-feedback">
                                         <strong><?= $this->e($errors['email']) ?></strong>
@@ -35,7 +35,7 @@
                                 <?php endif ?>
                             </div>
                             <div class="input-group mb-1">
-                                <input id="password" type="password" class="form-control form-control-lg bg-light fs-6" <?= isset($errors['password']) ? 'is-invalid' : '' ?>" name="password" required placeholder="Mật khẩu">
+                                <input id="password" type="password" class="form-control form-control-lg bg-light fs-6 <?= isset($errors['password']) ? 'is-invalid' : '' ?>" name="password" required placeholder="Mật khẩu">
                                 <?php if (isset($errors['password'])) : ?>
                                     <span class="invalid-feedback">
                                         <strong><?= $this->e($errors['password']) ?></strong>

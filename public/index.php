@@ -8,9 +8,20 @@ require_once __DIR__ . '/../bootstrap.php';
 
 define('APPNAME', 'NK Store');
 
-session_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $router = new \Bramus\Router\Router();
+
+$router->before('GET|POST', '/admin.*', function () {
+    if (!AUTHGUARD()->isAdmin()) {
+        $_SESSION['error_Mess'] = 'Bạn không có quyền truy cập!';
+        redirect('/home');
+        exit;
+    }
+});
 
 // Auth routes
 $router->post('/logout', '\App\Controllers\Auth\LoginController@destroy');
@@ -23,11 +34,15 @@ $router->post('/login', '\App\Controllers\Auth\LoginController@store');
 $router->get('/', '\App\Controllers\User\HomeController@index');
 $router->get('/home', '\App\Controllers\User\HomeController@index');
 
+
+
 // product routes
-$router->get('/products', '\App\Controllers\User\ProductController@products');
+$router->get('/products/(\d+)', '\App\Controllers\User\ProductController@index');
+
 // productlist routes
-$router->get('/productlist', '\App\Controllers\User\Productlist@productlist');
-$router->set404('\App\Controllers\Controller@sendNotFound');
+$router->get('/product-list', '\App\Controllers\User\ProductListController@productlist');
+$router->get('/search', '\App\Controller\User\ProductListController@search');
+$router->set404('\App\Controllers\User\Controller@sendNotFound');
 
 // admin routes
 $router->get('/admin', '\App\Controllers\Admin\ProductController@index');
@@ -47,13 +62,5 @@ $router->post('/admin/brands/store', '\App\Controllers\Admin\BrandController@sto
 $router->get('/admin/brands/edit/(\d+)', '\App\Controllers\Admin\BrandController@edit');
 $router->post('/admin/brands/update/(\d+)', '\App\Controllers\Admin\BrandController@update');
 $router->post('/admin/brands/delete/(\d+)', '\App\Controllers\Admin\BrandController@destroy');
-$router->run();
 
-$router->before('GET|POST', '/admin/.*', function() {
-    if (!AUTHGUARD()->isAdmin()) {
-        $_SESSION['error_Mess'] = 'Bạn không có quyền truy cập!';
-        redirect('/home');
-        exit;
-    }
-});
 $router->run();

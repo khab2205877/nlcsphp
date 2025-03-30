@@ -24,7 +24,7 @@
           data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="home.html"><img src="/images/logo1.png" height="75px" width="75px"></a>
+        <a class="navbar-brand" href="/"><img src="/images/logo1.png" height="75px" width="75px"></a>
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header">
@@ -36,7 +36,7 @@
           <div class="offcanvas-body">
             <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
               <li class="nav-item">
-                <a class="nav-link mx-lg-2 active" aria-current="page" href="home.html">Trang Chủ</a>
+                <a class="nav-link mx-lg-2 active" aria-current="page" href="/">Trang Chủ</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -78,10 +78,10 @@
               <i class="fa-solid fa-magnifying-glass search"></i>
               <i class="fa-solid fa-x cancle"></i>
             </div>
-            <div class="search-field">
-              <input type="text" placeholder="Search...">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
+            <form id="search-form" class="search-field" action="/search" method="get">
+              <input id="input_search" type="text" name="search" placeholder="Search..." value="<?= isset($_GET['search']) ? $this->e($_GET['search']) : '' ?>">
+              <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
           </div>
           <?php if (!AUTHGUARD()->isUserLoggedIn()) : ?>
             <div class="loginName">

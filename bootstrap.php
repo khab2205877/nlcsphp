@@ -15,9 +15,7 @@ try {
     'dbpass' => $_ENV['DB_PASS'],
   ]);
 } catch (Exception $ex) {
-  echo 'Không thể kết nối đến MySQL,
-		kiểm tra lại username/password đến MySQL.<br>';
-  dd($ex);
+  die('Không thể kết nối đến MySQL. Vui lòng kiểm tra lại thông tin kết nối.<br>' . $ex->getMessage());
 }
 
 $AUTHGUARD = new App\SessionGuard();

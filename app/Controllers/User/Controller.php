@@ -24,7 +24,6 @@ class Controller
         $this->sendPage('errors/404');
     }
 
-    // Lưu các giá trị của form được cho trong $data vào $_SESSION 
     protected function saveFormValues(array $data, array $except = [])
     {
         $form = [];

@@ -73,7 +73,7 @@ class User
         $this->email = $data['email'];
         $this->name = $data['name'];
         $this->password = password_hash($data['password'], PASSWORD_DEFAULT);
-        $this->role = $data['role'] ?? 'customer'; // Default role is 'customer'
+        $this->role = $data['role'] ?? 'customer';
         return $this;
     }
 
